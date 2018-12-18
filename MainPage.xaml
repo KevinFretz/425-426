@@ -14,12 +14,12 @@
         <TextBox x:Name="NumRule_Txt" HorizontalAlignment="Left" Margin="732,480,0,0" Text="" VerticalAlignment="Top" Height="42" Width="79" FontSize="22"/>
         <TextBox x:Name="Show_TxtBox" HorizontalAlignment="Center" Margin="20,10,0,0" Text="" VerticalAlignment="Center" Height="625" Width="1229" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False" ManipulationMode="None" FontSize="12" FontWeight="Normal" TextAlignment="DetectFromContent" Background="#66FFFFFF" FocusVisualSecondaryBrush="#66FFFFFF" SelectionHighlightColorWhenNotFocused="#66FFFFFF" BorderBrush="#66FFFFFF" FocusVisualPrimaryBrush="#66FFFFFF" Foreground="#66FFFFFF"/>
         <GridView HorizontalAlignment="Left" Margin="1941,566,0,0" VerticalAlignment="Top" Width="100"/>
-        <TextBlock x:Name="HowManyStatesLabel" HorizontalAlignment="Left" Margin="550,161,0,0" Text="How many states do you want to change?" TextWrapping="Wrap" VerticalAlignment="Top" Height="37" Width="447" FontSize="24" ManipulationMode="None"/>
-        <TextBox x:Name="HowManyStatesTextBox" HorizontalAlignment="Left" Margin="725,217,0,0" Text="" VerticalAlignment="Top" Height="43" Width="79" FontSize="22"/>
+        <TextBlock x:Name="HowManyStatesLabel" HorizontalAlignment="Left" Margin="550,161,0,0" Text="How many cells do you want to change?" TextWrapping="Wrap" VerticalAlignment="Top" Height="37" Width="447" FontSize="24" ManipulationMode="None"/>
+        <TextBox x:Name="HowManyStatesTextBox" HorizontalAlignment="Left" Margin="732,214,0,0" Text="" VerticalAlignment="Top" Height="43" Width="79" FontSize="22"/>
         <TextBlock x:Name="TimeStepsLabel" HorizontalAlignment="Center" Margin="0,35,0,0" Text="Enter in how many time steps you want." TextWrapping="Wrap" VerticalAlignment="Top" Height="32" FontSize="24" ManipulationMode="None"/>
         <TextBox x:Name="TimeStepsTextBox" HorizontalAlignment="Center" Margin="0,98,0,0" Text="" VerticalAlignment="Top" Height="42" Width="79" FontSize="22"/>
-        <TextBlock x:Name="ChangedStatesLabel" HorizontalAlignment="Left" Margin="478,291,0,0" Text="Enter the string of 0s or 1s you want for the initial state." TextWrapping="Wrap" VerticalAlignment="Top" Height="29" Width="598" FontSize="24" ManipulationMode="None"/>
-        <TextBox x:Name="ChangedStatesTextBox" HorizontalAlignment="Left" Text="" VerticalAlignment="Top" Height="42" Width="251" FontSize="22" Margin="646,329,0,0"/>
-        <Button x:Name="ReturnButton" Content="Return" HorizontalAlignment="Left" Margin="732,661,0,0" VerticalAlignment="Top" Click="ReturnButton_Click"/>
+        <TextBlock x:Name="ChangedStatesLabel" HorizontalAlignment="Left" Margin="478,291,0,0" Text="Enter the string of 0s or 1s you want for the initial state." TextWrapping="Wrap" VerticalAlignment="Top" Height="35" Width="598" FontSize="24" ManipulationMode="None"/>
+        <TextBox x:Name="ChangedStatesTextBox" HorizontalAlignment="Left" Text="" VerticalAlignment="Top" Height="42" Width="251" FontSize="22" Margin="649,329,0,0"/>
+        <Button x:Name="ReturnButton" Content="Return" HorizontalAlignment="Left" Margin="742,733,0,0" VerticalAlignment="Top" Click="ReturnButton_Click"/>
     </Grid>
 </Page>
