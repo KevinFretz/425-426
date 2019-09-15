@@ -13,18 +13,50 @@ using System.Windows.Forms;
 namespace WolframRules
 {
     public partial class Form1 : Form
-    {           
+    {
+
+        public static int HowManyTimeSteps = 0;
+        public static int currentTimeStep = 0;
+        public static int sizeOfArray = 0;
+        public static int numberOfChangedStates = 0;
+        public static int[] stringOfChangedStates;
+        public static int ruleNumber = 0;
+        public static int lengthOfChangedStates = 0;
+
+
+        // check boxes
+        public static bool isInfinite;
+        public static bool isFinite;
+        public static bool isParallel;
+        public static bool isSequential;
+        public static bool isLTR;
+        public static bool isRTL;
+        public static bool isRandom;
+        public static bool isPB;
+        public static bool isNB;
+        public static bool isUser;
+        
+
         public Form1()
         {
             InitializeComponent();
 
-            Show_TxtBox.Hide();
-            ReturnButton.Hide();
+
+            
+            InfiniteCB.Checked = true;
             PeriodicCB.Hide();
             NullCB.Hide();
             ArraySizeLabel.Hide();
-            ArraySizeTB.Hide();  
-            
+            ArraySizeTB.Hide();
+            ParallelCB.Hide();
+            SequentialCB.Hide();
+            RightToLeft.Hide();
+            LeftToRight.Hide();
+            Random.Hide();
+            UserCB.Hide();
+            ParallelCB.Checked = true;
+            PeriodicCB.Checked = true;
+            LeftToRight.Checked = true;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -36,67 +68,65 @@ namespace WolframRules
 
         private void BTN_Submit_Click(object sender, EventArgs e)
         {
-            Pen p = new Pen(Brushes.Beige, 5);
-            Graphics g = Show_TxtBox.CreateGraphics();
-
-            
-            Show_TxtBox.Visible = Visible;
-            TimeStepsLabel.Hide();
-            TimeStepsTextBox.Hide();
-            ChangedStatesLabel.Hide();
-            ChangedStatesTextBox.Hide();
-            HowManyStatesLabel.Hide();
-            HowManyStatesTextBox.Hide();
-            RuleLabel.Hide();
-            NumRule_Txt.Hide();
-            BTN_Submit.Hide();
-            InfiniteCB.Hide();
-            FiniteCB.Hide();
-            NullCB.Hide();
-            PeriodicCB.Hide();
-            ArraySizeLabel.Hide();
-            ArraySizeTB.Hide();
-            //createGraph();
-            g.DrawEllipse(p, 1, 1, 10, 10);
-        }
-
-        private void createGraph()
-        {
-            Show_TxtBox.Visible = Visible;
-            Show_TxtBox.Enabled = false;
-            Show_TxtBox.AcceptsReturn = true;
-            Show_TxtBox.Text = string.Empty;
-            //Show_TxtBox.TextAlignment = TextAlignment.DetectFromContent;
-            //Show_TxtBox.IsColorFontEnabled = true;
-
-            int arraySize = 0;
-            int timeSteps = Convert.ToInt32(TimeStepsTextBox.Text);
-
-            if(InfiniteCB.Checked)
+            bool isThereError = errorValidation();
+            if (isThereError == true)
             {
-                arraySize = (2 * timeSteps) + (2 * Convert.ToInt32(HowManyStatesTextBox.Text));
+                showError();
+                return;
             }
-            else if (FiniteCB.Checked)
-            {
-                arraySize = Convert.ToInt32(ArraySizeTB.Text);
-            }          
 
-           
+            HowManyTimeSteps = Convert.ToInt32(TimeStepsTextBox.Text);
+
             if (InfiniteCB.Checked)
-            {
-                infinite(arraySize, timeSteps);
+            {               
+                sizeOfArray = (2 * HowManyTimeSteps) + (2 * Convert.ToInt32(HowManyStatesTextBox.Text));
             }
             else if (FiniteCB.Checked)
-            {
-                finite(arraySize, timeSteps);
+            {                
+                sizeOfArray = Convert.ToInt32(ArraySizeTB.Text);
+            }
+
+            numberOfChangedStates = Convert.ToInt32(HowManyStatesTextBox.Text);
+            stringOfChangedStates = new int[numberOfChangedStates];
+            //int[] stringOfChangedStates = new int[numberOfChangedStates];          
+
+
+            for (int i = 0; i < numberOfChangedStates; i++)
+            {                
+                if (ChangedStatesCLB.GetItemChecked(i))
+                {
+                    stringOfChangedStates[i] = 1;
+                }
+                else
+                {
+                    stringOfChangedStates[i] = 0;
+                }
+
+               
             }
 
             
 
+            lengthOfChangedStates = Convert.ToInt32(stringOfChangedStates.Length);
+            ruleNumber = Convert.ToInt32(NumRule_Txt.Text);
+
+            // check boxes
+            isInfinite = InfiniteCB.Checked;
+            isFinite = FiniteCB.Checked;
+            isParallel = ParallelCB.Checked;
+            isSequential = SequentialCB.Checked;
+            isLTR = LeftToRight.Checked;
+            isRTL = RightToLeft.Checked;
+            isRandom = Random.Checked;
+            isPB = PeriodicCB.Checked;
+            isNB = NullCB.Checked;
+            isUser = UserCB.Checked;
+
+
+            /*
             TimeStepsLabel.Hide();
             TimeStepsTextBox.Hide();
-            ChangedStatesLabel.Hide();
-            ChangedStatesTextBox.Hide();
+
             HowManyStatesLabel.Hide();
             HowManyStatesTextBox.Hide();
             RuleLabel.Hide();
@@ -108,16 +138,36 @@ namespace WolframRules
             PeriodicCB.Hide();
             ArraySizeLabel.Hide();
             ArraySizeTB.Hide();
-            //Show_TxtBox.Visible = Visible;
-            ReturnButton.Visible = Visible;
+            ParallelCB.Hide();
+            SequentialCB.Hide();
+            ChangedStatesTB.Hide();
+            ChangedStatesCLB.Hide();
+            RightToLeft.Hide();
+            LeftToRight.Hide();
+            Random.Hide();
+            //createGraph();
+            */
+            
+            
+
+            if (isThereError == false)
+            {
+                Form2 frm2 = new Form2();
+                frm2.WindowState = FormWindowState.Maximized;
+                frm2.Show();
+            }
+                     
+            
+            
         }
+
+        
 
         private void ReturnButton_Click(object sender, EventArgs e)
         {
             TimeStepsLabel.Visible = Visible;
             TimeStepsTextBox.Visible = Visible;
-            ChangedStatesLabel.Visible = Visible;
-            ChangedStatesTextBox.Visible = Visible;
+
             HowManyStatesLabel.Visible = Visible;
             HowManyStatesTextBox.Visible = Visible;
             RuleLabel.Visible = Visible;
@@ -129,781 +179,386 @@ namespace WolframRules
             NullCB.Visible = Visible;
             ArraySizeLabel.Visible = Visible;
             ArraySizeTB.Visible = Visible;
-            Show_TxtBox.Hide();
-            ReturnButton.Hide();
-
+            ParallelCB.Visible = Visible;
+            SequentialCB.Visible = Visible;
+            ChangedStatesCLB.Visible = Visible;
             
+            RightToLeft.Visible = Visible;
+            LeftToRight.Visible = Visible;
+            Random.Visible = Visible;
+            
+
+
         }
-        
+
         private void Show_TxtBox_TextChanged(object sender, EventArgs e)
         {
-            /*
-            if (Show_TxtBox.Text.Length == 0)
-            {
-                return;
-            }
-
-            float height = Show_TxtBox.Height * 0.99f;
-            float width = Show_TxtBox.Width * 0.99f;
-
-            Show_TxtBox.SuspendLayout();
-
-            Font tryFont = Show_TxtBox.Font;
-            Size tempSize = TextRenderer.MeasureText(Show_TxtBox.Text, tryFont);
-
-            float heightRatio = height / tempSize.Height;
-            float widthRatio = width / tempSize.Width;
-
-            tryFont = new Font(tryFont.FontFamily, tryFont.Size * Math.Min(widthRatio, heightRatio), tryFont.Style);
-
-            Show_TxtBox.Font = tryFont;
-            Show_TxtBox.ResumeLayout();
             
-            
-            Size size = TextRenderer.MeasureText(Show_TxtBox.Text, Show_TxtBox.Font);
-            Show_TxtBox.Width = size.Width;
-            Show_TxtBox.Height = size.Height;
-            */
+        }    
+        
 
-            Graphics g = Show_TxtBox.CreateGraphics();
-            Pen p = new Pen(Brushes.Black, 1);
-
-
-        }               
-
-        private void scaling(int timeSteps)
-        {
-            // Determining font size
-
-            if (ChangedStatesTextBox.Text.Length <= 2)
+            private void InfiniteCB_CheckedChanged(object sender, EventArgs e)
             {
-
-                if (timeSteps >= 0 && timeSteps <= 7)
+                /*
+                if (FiniteCB.Checked)
                 {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 25);
+                    PeriodicCB.Visible = Visible;
+                    NullCB.Visible = Visible;
+                    ArraySizeLabel.Visible = Visible;
+                    ArraySizeTB.Visible = Visible;
+                    InfiniteCB.Checked = false;
                 }
-                if (timeSteps > 7 && timeSteps <= 12)
+                */
+                if (InfiniteCB.Checked)
                 {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 12);
-                }
-                if (timeSteps > 12 && timeSteps <= 25)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 8);
-                }
-                if (timeSteps > 25 && timeSteps <= 28)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 6);
-
-                }
-                if (timeSteps > 28 && timeSteps <= 31)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 5);
-
-                }
-                if (timeSteps > 31 && timeSteps <= 40)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 4.5f);
-
-                }
-                if (timeSteps > 40 && timeSteps <= 45)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 4.5f);
-
-                }
-                if (timeSteps > 45 && timeSteps <= 68)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 3);
-
-                }
-                if (timeSteps > 68 && timeSteps <= 80)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 2);
-
-                }
-                if (timeSteps > 80 && timeSteps <= 100)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 2);
-
-                }
-                if (timeSteps > 100 && timeSteps <= 127)
-                {
-                    Show_TxtBox.Font = new Font("Microsoft Sans Serif", 2);
-
+                    PeriodicCB.Hide();
+                    NullCB.Hide();
+                    ArraySizeLabel.Hide();
+                    ArraySizeTB.Hide();
+                    ParallelCB.Hide();
+                    SequentialCB.Hide();
+                    LeftToRight.Hide();
+                    RightToLeft.Hide();
+                    Random.Hide();
+                    UserCB.Hide();
+                    FiniteCB.Checked = false;
                 }
             }
-            /*
-            else if (ChangedStatesTextBox.Text.Length > 2 && ChangedStatesTextBox.Text.Length <= 4)
+
+            private void FiniteCB_CheckedChanged(object sender, EventArgs e)
             {
-                if (timeSteps >= 0 && timeSteps <= 7)
+                if (FiniteCB.Checked)
                 {
-                    Show_TxtBox.FontSize = 37;
+                    ParallelCB.Visible = Visible;
+                    SequentialCB.Visible = Visible;
+                    PeriodicCB.Visible = Visible;
+                    NullCB.Visible = Visible;
+                    ArraySizeLabel.Visible = Visible;
+                    ArraySizeTB.Visible = Visible;
+                    
+                    InfiniteCB.Checked = false;
                 }
-                if (timeSteps > 7 && timeSteps <= 12)
+                /*
+                if (InfiniteCB.Checked)
                 {
-                    Show_TxtBox.FontSize = 23;
+                    PeriodicCB.Hide();
+                    NullCB.Hide();
+                    ArraySizeLabel.Hide();
+                    ArraySizeTB.Hide();
+                    FiniteCB.Checked = false;
                 }
-                if (timeSteps > 12 && timeSteps <= 17)
+                */
+            }
+
+            private void Form1_Paint(object sender, PaintEventArgs e)
+            {
+                
+
+
+            }
+           
+
+            private void Form1_TextChanged(object sender, EventArgs e)
+            {
+
+            }
+
+            private void HowManyStatesTextBox_TextChanged(object sender, EventArgs e)
+            {            
+                if (HowManyStatesTextBox.Text != String.Empty)
                 {
-                    Show_TxtBox.FontSize = 17;
-                }
-                if (timeSteps > 17 && timeSteps <= 28)
+                    howManyStatesChanged();
+                }                
+            }
+
+            private void howManyStatesChanged()
+            {
+                ChangedStatesCLB.HorizontalScrollbar = true;
+                var items = ChangedStatesCLB.Items;                
+
+                ChangedStatesCLB.Items.Clear();
+
+                for (int i = 0; i < Convert.ToInt32(HowManyStatesTextBox.Text); i++)
                 {
-                    Show_TxtBox.FontSize = 13;
-                }
-                if (timeSteps > 28 && timeSteps <= 31)
-                {
-                    Show_TxtBox.FontSize = 11;
-                }
-                if (timeSteps > 31 && timeSteps <= 40)
-                {
-                    Show_TxtBox.FontSize = 9;
-                }
-                if (timeSteps > 41 && timeSteps <= 50)
-                {
-                    Show_TxtBox.FontSize = 7;
-                }
-                if (timeSteps > 51 && timeSteps <= 68)
-                {
-                    Show_TxtBox.FontSize = 6;
-                }
-                if (timeSteps > 68 && timeSteps <= 80)
-                {
-                    Show_TxtBox.FontSize = 5;
-                }
-                if (timeSteps > 80 && timeSteps <= 100)
-                {
-                    Show_TxtBox.FontSize = 4;
+                    items.Add(i+1);
                 }
             }
-            else if (ChangedStatesTextBox.Text.Length > 4 && ChangedStatesTextBox.Text.Length <= 6)
+
+            private void PeriodicCB_CheckedChanged(object sender, EventArgs e)
             {
-                if (timeSteps >= 0 && timeSteps <= 7)
+
+                if (PeriodicCB.Checked)
                 {
-                    Show_TxtBox.FontSize = 36;
+                    NullCB.Checked = false;
                 }
-                if (timeSteps > 7 && timeSteps <= 12)
+
+            }
+
+            private void NullCB_CheckedChanged(object sender, EventArgs e)
+            {
+
+                if (NullCB.Checked)
                 {
-                    Show_TxtBox.FontSize = 24;
-                }
-                if (timeSteps > 12 && timeSteps <= 17)
-                {
-                    Show_TxtBox.FontSize = 18;
-                }
-                if (timeSteps > 17 && timeSteps <= 28)
-                {
-                    Show_TxtBox.FontSize = 13;
-                }
-                if (timeSteps > 28 && timeSteps <= 31)
-                {
-                    Show_TxtBox.FontSize = 11.5;
-                }
-                if (timeSteps > 31 && timeSteps <= 40)
-                {
-                    Show_TxtBox.FontSize = 9;
-                }
-                if (timeSteps > 41 && timeSteps <= 50)
-                {
-                    Show_TxtBox.FontSize = 8;
-                }
-                if (timeSteps > 51 && timeSteps <= 68)
-                {
-                    Show_TxtBox.FontSize = 6;
-                }
-                if (timeSteps > 68 && timeSteps <= 80)
-                {
-                    Show_TxtBox.FontSize = 5;
-                }
-                if (timeSteps > 80 && timeSteps <= 100)
-                {
-                    Show_TxtBox.FontSize = 4;
+                    PeriodicCB.Checked = false;
                 }
             }
-            */
-        }
 
-        private void finite(int arraySize, int timeSteps)
-        {
-            if (Convert.ToInt32(ChangedStatesTextBox.Text.Length) > Convert.ToInt32(HowManyStatesTextBox.Text) || Convert.ToInt32(ChangedStatesTextBox.Text.Length) < Convert.ToInt32(HowManyStatesTextBox.Text))
+            private bool errorValidation()
             {
-                //Show_TxtBox.FontSize = 36;
-                Show_TxtBox.Text += "Error. The string length must equal how many states you wanted to change.";
+                bool isError = false;
 
-                TimeStepsLabel.Hide();
-                TimeStepsTextBox.Hide();
-                ChangedStatesLabel.Hide();
-                ChangedStatesTextBox.Hide();
-                HowManyStatesLabel.Hide();
-                HowManyStatesTextBox.Hide();
-                RuleLabel.Hide();
-                NumRule_Txt.Hide();
-                BTN_Submit.Hide();
-                Show_TxtBox.Visible = Visible;
-                ReturnButton.Visible = Visible;
+                int num = 0;
+                bool result = int.TryParse(TimeStepsTextBox.Text, out num);
+                if (!int.TryParse(TimeStepsTextBox.Text, out num))
+                {
+                    MessageBox.Show("Time steps must be a number.");
+                    return true;
+                }
+
+                if (ArraySizeTB.Text == "" && FiniteCB.Checked)
+                {
+                    isError = true;
+                    //MessageBox.Show("You need to set the array size.");                    
+                }
+
+                if (TimeStepsTextBox.Text == "")
+                {
+                    isError = true;
+                    return true;
+                    //MessageBox.Show("You need to set the number of time steps.");                    
+                }
+
+                if (NumRule_Txt.Text == "")
+                {
+                isError = true;
+                //MessageBox.Show("You need to set the number of time steps.");
+                }
+
+                if (Convert.ToInt32(TimeStepsTextBox.Text) < 0)
+                {
+                isError = true;
+                //MessageBox.Show("Time Steps must be at least 0.");                    
+                }
+
+                if (isFinite == true)
+                {
+                    if (Convert.ToInt32(ArraySizeTB.Text) < 0)
+                    {
+                        isError = true;
+                        //MessageBox.Show("Array size must be greater than 0.");
+                    }
+                }
+
+                if (Convert.ToInt32(NumRule_Txt.Text) < 0 || Convert.ToInt32(NumRule_Txt.Text) > 256)
+                {
+                isError = true;
+                //MessageBox.Show("The rule number must be between 0 and 255.");
+                }
+
+                /*
+                int num;
+                if (int.TryParse(TimeStepsTextBox.Text, out num))
+                {
+
+                }
+                else
+                {
+                    MessageBox.Show("Time Steps must be an integer.");
+                }
+                */
+
+                return isError; ;
             }
-            else
+
+            private void showError()
+            {             
+
+                if (ArraySizeTB.Text == "" && FiniteCB.Checked)
+                {
+                    MessageBox.Show("You need to set the array size.");                    
+                }
+
+                if (TimeStepsTextBox.Text == "")
+                {
+                    MessageBox.Show("You need to set the number of time steps.");                    
+                }
+
+                if (NumRule_Txt.Text == "")
+                {
+                    MessageBox.Show("You need to set the number of time steps.");
+                }
+
+                if (Convert.ToInt32(TimeStepsTextBox.Text) < 0)
+                {
+                    MessageBox.Show("Time Steps must be at least 0.");                    
+                }
+
+            if (isFinite)
             {
-                scaling(timeSteps);
-
-                int[] presentState = new int[arraySize];
-                int[] previousState = new int[arraySize];
-
-                int changedStates = Convert.ToInt32(ChangedStatesTextBox.Text);
-                int numOfChangedStates = Convert.ToInt32(ChangedStatesTextBox.Text.Length);
-                int middleOfArray = (arraySize - numOfChangedStates) / 2;
-
-
-                for (int i = 0; i < arraySize; i++)
+                if (Convert.ToInt32(ArraySizeTB.Text) < 0 && isFinite)
                 {
-                    if (i < middleOfArray)
-                    {
-                        presentState[i] = 0;
-                    }
-                    else if (i >= middleOfArray && i <= numOfChangedStates + middleOfArray)
-                    {
-                        presentState[i] = changedStates % 10;
-                        changedStates /= 10;
-                    }
-                    else if (i > middleOfArray + changedStates)
-                    {
-                        presentState[i] = 0;
-                    }
+                    MessageBox.Show("Array size must be greater than 0.");
                 }
-
-                Array.Reverse(presentState);
-
-
-                int time = 0;
-                int p, n, caseNum = 0;
-                //char choice;
-                int[] rule = new int[8];
-
-                int ruleNumber = Convert.ToInt32(NumRule_Txt.Text);
-
-                int ruleNum = Convert.ToInt32(Convert.ToString(ruleNumber, 2).PadLeft(8, '0'));
-
-                // Setting the rule array to contain a single digit of the string of the binary number that the user enters.
-                for (int i = rule.Length - 1; i >= 0; i--)
-                {
-                    rule[i] = ruleNum % 10;
-                    ruleNum /= 10;
-                }
-
-                //Show_TxtBox.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
-
-                string s = null;
-
-                for (int i = 0; i < arraySize; i++)
-                {
-                    if (presentState[i] == 0)
-                    {
-                        s += "   ";
-
-                        //Show_TxtBox.Text += "    ";
-                    }
-                    else
-                    {
-                        //Show_TxtBox.Text += "\uD83D\uDD34";
-                        s += "\uD83D\uDD34";
-                    }
-
-                }
-
-                s += "\r\n";
-
-                while (time < Convert.ToInt32(TimeStepsTextBox.Text))
-                {
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        previousState[i] = presentState[i];
-                    }
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        p = i - 1;
-                        n = i + 1;
-                        caseNum = 0;
-
-                        // *****************************************************************************************************
-                        if (NullCB.Checked)
-                        {
-                            if (p == -1)
-                            {
-                                caseNum += 2 * previousState[i] + 1 * previousState[n];
-                            }
-                            else if (n == arraySize)
-                            {
-                                caseNum += 4 * previousState[p] + 2 * previousState[i];
-                            }
-                            else
-                            {
-                                caseNum += 4 * previousState[p] + 2 * previousState[i] + 1 * previousState[n];
-                            }
-                        } else if(PeriodicCB.Checked)
-                        {
-                            if (p == -1)
-                            {
-                                caseNum += 4* previousState[arraySize-1] + 2 * previousState[i] + 1 * previousState[n];
-                            }
-                            else if (n == arraySize)
-                            {
-                                caseNum += 4 * previousState[p] + 2 * previousState[i] + 1 *previousState[0];
-                            }
-                            else
-                            {
-                                caseNum += 4 * previousState[p] + 2 * previousState[i] + 1 * previousState[n];
-                            }
-
-                        }
-                        switch (caseNum)
-                        {
-                            case 0:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 1:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 2:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 3:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 4:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 5:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 6:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 7:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-
-                        }
-                    }
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        if (presentState[i] == 0)
-                        {
-                            s += "   ";
-
-                            //Show_TxtBox.Text += "    ";
-                        }
-                        else
-                        {
-                            s += "\uD83D\uDD34";
-
-                            //Show_TxtBox.Text += "\uD83D\uDD34";
-                        }
-                    }
-                    //Show_TxtBox.Text += "\r\n";
-                    s += "\r\n";
-
-
-                    time++;
-
-                }
-
-                Show_TxtBox.Text += s;
-
-                Show_TxtBox.Text += "\r\n";
             }
-        }
 
-        private void infinite(int arraySize, int timeSteps)
-        {
-            Pen pen = new Pen(Brushes.Black);
-            Graphics g = Show_TxtBox.CreateGraphics();
-
-            g.DrawEllipse(pen, 1, 1, 10, 10);
-            
-            if (Convert.ToInt32(ChangedStatesTextBox.Text.Length) > Convert.ToInt32(HowManyStatesTextBox.Text) || Convert.ToInt32(ChangedStatesTextBox.Text.Length) < Convert.ToInt32(HowManyStatesTextBox.Text))
-            {
-                //Show_TxtBox.FontSize = 36;
-                Show_TxtBox.Text += "Error. The string length must equal how many states you wanted to change.";
-
-                TimeStepsLabel.Hide();
-                TimeStepsTextBox.Hide();
-                ChangedStatesLabel.Hide();
-                ChangedStatesTextBox.Hide();
-                HowManyStatesLabel.Hide();
-                HowManyStatesTextBox.Hide();
-                RuleLabel.Hide();
-                NumRule_Txt.Hide();
-                BTN_Submit.Hide();
-                Show_TxtBox.Visible = Visible;
-                ReturnButton.Visible = Visible;
-            }
-            else
-            {
-                scaling(timeSteps);
-
-                int[] presentState = new int[arraySize];
-                int[] previousState = new int[arraySize];
-
-                int changedStates = Convert.ToInt32(ChangedStatesTextBox.Text);
-                int numOfChangedStates = Convert.ToInt32(ChangedStatesTextBox.Text.Length);
-                int middleOfArray = (arraySize - numOfChangedStates) / 2;
-
-
-                for (int i = 0; i < arraySize; i++)
+                if (Convert.ToInt32(NumRule_Txt.Text) < 0 || Convert.ToInt32(NumRule_Txt.Text) > 256)
                 {
-                    if (i < middleOfArray)
-                    {
-                        presentState[i] = 0;
-                    }
-                    else if (i >= middleOfArray && i <= numOfChangedStates + middleOfArray)
-                    {
-                        presentState[i] = changedStates % 10;
-                        changedStates /= 10;
-                    }
-                    else if (i > middleOfArray + changedStates)
-                    {
-                        presentState[i] = 0;
-                    }
+                    MessageBox.Show("The rule number must be between 0 and 255.");
                 }
 
-                Array.Reverse(presentState);
-
-
-                int time = 0;
-                int p, n, caseNum = 0;
-                //char choice;
-                int[] rule = new int[8];
-
-                int ruleNumber = Convert.ToInt32(NumRule_Txt.Text);
-
-                int ruleNum = Convert.ToInt32(Convert.ToString(ruleNumber, 2).PadLeft(8, '0'));
-
-                // Setting the rule array to contain a single digit of the string of the binary number that the user enters.
-                for (int i = rule.Length - 1; i >= 0; i--)
+                int num;
+                bool result = int.TryParse(TimeStepsTextBox.Text, out num);                
+                if (!int.TryParse(TimeStepsTextBox.Text, out num))
                 {
-                    rule[i] = ruleNum % 10;
-                    ruleNum /= 10;
+                    MessageBox.Show("Time steps must be a number.");
+                    return;
                 }
-
-                //Show_TxtBox.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
-
-                int midOfArray = arraySize / 2;
-                int distanceFromMid = 0;
-                Graphics text;
-
-                string s = null;
-                //Form1_Paint(sender, e, timeSteps, 9);
-
-                for (int i = 0; i < arraySize; i++)
-                {
-                    if (presentState[i] == 0)
-                    {
-                        s += "   ";
-
-                        //Show_TxtBox.Text += "    ";
-                    }
-                    else
-                    {
-                        //Show_TxtBox.Text += "\uD83D\uDD34";
-                        
-                        distanceFromMid = presentState[i] - middleOfArray;
-                        drawCircle(timeSteps, distanceFromMid, g);
-                        //s += "\uD83D\uDD34";
-                    }
-
-                }
-
-                s += "\r\n";
-
-                while (time < Convert.ToInt32(TimeStepsTextBox.Text))
-                {
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        previousState[i] = presentState[i];
-                    }
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        p = i - 1;
-                        n = i + 1;
-                        caseNum = 0;
-
-                        // *****************************************************************************************************
-
-                        if (p == -1)
-                        {
-                            caseNum += 2 * previousState[i] + 1 * previousState[n];
-                        }
-                        else if (n == arraySize)
-                        {
-                            caseNum += 4 * previousState[p] + 2 * previousState[i];
-                        }
-                        else
-                        {
-                            caseNum += 4 * previousState[p] + 2 * previousState[i] + 1 * previousState[n];
-                        }
-
-                        switch (caseNum)
-                        {
-                            case 0:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 1:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 2:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 3:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 4:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 5:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 6:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-                            case 7:
-                                if (rule[7 - caseNum] == 0)
-                                {
-                                    presentState[i] = 0;
-                                    break;
-                                }
-                                else
-                                {
-                                    presentState[i] = 1;
-                                    break;
-                                }
-
-                        }
-                    }
-                    for (int i = 0; i < arraySize; i++)
-                    {
-                        if (presentState[i] == 0)
-                        {
-                            s += "   ";
-
-                            //Show_TxtBox.Text += "    ";
-                        }
-                        else
-                        {
-                            //s += "\uD83D\uDD34";
-                            distanceFromMid = presentState[i] - middleOfArray;
-                            drawCircle(timeSteps, distanceFromMid, g);
-                            //Show_TxtBox.Text += "\uD83D\uDD34";
-                        }
-                    }
-                    //Show_TxtBox.Text += "\r\n";
-                    s += "\r\n";
-
-
-                    time++;
-
-                }
-
-                //Show_TxtBox.Text += s;
-
-                Show_TxtBox.Text += "\r\n";
+                
                 
             }
 
+        private void ParallelCB_CheckedChanged(object sender, EventArgs e)
+            {
+                if (ParallelCB.Checked == true)
+                {
+                    SequentialCB.Checked = false;
+                    RightToLeft.Hide();
+                    LeftToRight.Hide();
+                    Random.Hide();
+                    UserCB.Hide();
+                }
+            }
 
-        }
+            private void SequentialCB_CheckedChanged(object sender, EventArgs e)
+            {
+                if (SequentialCB.Checked == true)
+                {
+                    ParallelCB.Checked = false;
+                    RightToLeft.Visible = Visible;
+                    LeftToRight.Visible = Visible;
+                    Random.Visible = Visible;
+                    //UserCB.Visible = Visible;
+                }
+            }
 
-        private void InfiniteCB_CheckedChanged(object sender, EventArgs e)
+            private void LeftToRight_CheckedChanged(object sender, EventArgs e)
+            {
+                if (LeftToRight.Checked == true)
+                {
+                    RightToLeft.Checked = false;
+                    Random.Checked = false;
+                    UserCB.Checked = false;
+                }
+            }
+
+            private void RightToLeft_CheckedChanged(object sender, EventArgs e)
+            {
+                if (RightToLeft.Checked == true)
+                {
+                    LeftToRight.Checked = false;
+                    Random.Checked = false;
+                    UserCB.Checked = false;
+                }
+            }
+
+            private void Random_CheckedChanged(object sender, EventArgs e)
+            {
+                if (Random.Checked == true)
+                {
+                    LeftToRight.Checked = false;
+                    RightToLeft.Checked = false;
+                    UserCB.Checked = false;
+                }
+            }
+
+        private void Form1_Load(object sender, EventArgs e)
         {
-            if (FiniteCB.Checked)
-            {
-                PeriodicCB.Visible = Visible;
-                NullCB.Visible = Visible;
-                ArraySizeLabel.Visible = Visible;
-                ArraySizeTB.Visible = Visible;
-                InfiniteCB.Checked = false;
-            }
-            if (InfiniteCB.Checked)
-            {
-                PeriodicCB.Hide();
-                NullCB.Hide();
-                ArraySizeLabel.Hide();
-                ArraySizeTB.Hide();
-                FiniteCB.Checked = false;
-            }
-        }
-
-        private void FiniteCB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (FiniteCB.Checked)
-            {
-                PeriodicCB.Visible = Visible;
-                NullCB.Visible = Visible;
-                ArraySizeLabel.Visible = Visible;
-                ArraySizeTB.Visible = Visible;
-                InfiniteCB.Checked = false;
-            }
-            if (InfiniteCB.Checked)
-            {
-                PeriodicCB.Hide();
-                NullCB.Hide();
-                ArraySizeLabel.Hide();
-                ArraySizeTB.Hide();
-                FiniteCB.Checked = false;
-            }
-        }
-
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-            List<Point> points = new List<Point>();
-            Graphics g;
-            g = e.Graphics;    // only ever use this one for persistent graphics!!
             
-            g.FillEllipse(Brushes.Red, 1, 1, 10, 10);
-            g.FillEllipse(Brushes.Red, 11, 11, 10, 10);
         }
 
-        private Graphics drawCircle(int timesteps, int numFromMid, Graphics graphic)
+        private void RandomizeSS_Click(object sender, EventArgs e)
         {
-            float TBheight = 512;
-            float TBwidth = 1057;
-            float CircHeight = TBheight / timesteps;
-            float CircWidth = CircHeight;
-
-            float midOfTB = (TBwidth / 2);
-
-            float xCord = midOfTB + (CircWidth * numFromMid);
-            float yCord = timesteps * (CircHeight / 2);
-
-            Pen pen = new Pen(Brushes.Black, 1);            
-
-            graphic.DrawEllipse(pen, xCord, yCord, CircWidth, CircHeight);
-
-            graphic.FillEllipse(Brushes.Red, 1, 1, 10, 10);
-            graphic.FillEllipse(Brushes.Red, 11, 11, 10, 10);
-            return graphic;
+            if (HowManyStatesTextBox.Text != String.Empty)
+            {
+                randomSS();
+            }
         }
 
-        private void Form1_TextChanged(object sender, EventArgs e)
+        private void randomSS()
         {
-            Graphics g;
+            Random r = new Random();
+            int[] randomArray = new int[Convert.ToInt32(HowManyStatesTextBox.Text)];
+
+            for (int i = 0; i < Convert.ToInt32(HowManyStatesTextBox.Text); i++)
+            {
+                randomArray[i] = r.Next(0, 2);
+            }
+                       
+            for (int j = 0; j < Convert.ToInt32(HowManyStatesTextBox.Text); j++)
+            {
+                if (randomArray[j] == 1)
+                {
+                    ChangedStatesCLB.SetItemCheckState(j, CheckState.Checked);
+                }
+                else
+                {
+                    ChangedStatesCLB.SetItemCheckState(j, CheckState.Unchecked);
+                }
+            }
         }
+
+        private void UserCB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (UserCB.Checked == true)
+            {
+                RightToLeft.Checked = false;
+                LeftToRight.Checked = false;
+                Random.Checked = false;
+            }
+        }
+
+        private void ArraySizeTB_TextChanged(object sender, EventArgs e)
+        {
+            if (ArraySizeTB.Text != "")
+            {
+                userImplement();
+            }
+        }
+
+        private void userImplement()
+        {       
+            /*
+            Label[] user = new Label[Convert.ToInt32(ArraySizeTB.Text)];
+            TextBox[] userTB = new TextBox[Convert.ToInt32(ArraySizeTB.Text)];
+
+            for (int i = 0; i < Convert.ToInt32(ArraySizeTB.Text); i++)
+            {
+                this.Controls.Remove(user[i]);
+                this.Controls.Remove(userTB[i]);
+            }
+
+            int yLoc = 350;
+
+            for (int i = 0; i < Convert.ToInt32(ArraySizeTB.Text); i++)
+            {
+                
+                user[i] = new Label();
+                user[i].Text = "Cell: " + (i + 1);
+                user[i].Location = new Point(30, yLoc);
+                userTB[i] = new TextBox();                
+                userTB[i].Location = new Point(130, yLoc);
+                
+                this.Controls.Add(user[i]);
+                this.Controls.Add(userTB[i]);
+                user[i].Update();
+                userTB[i].Update();
+                
+                yLoc = yLoc + 30;      
+                
+            }
+            */
+
+        }
+        
     }
-}
+} 
